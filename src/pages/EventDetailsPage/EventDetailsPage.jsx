@@ -58,6 +58,10 @@ const EventDetailsPage = () => {
     navigate(`/`);
   };
 
+  const handleNavToEmailAttendees = () => {
+    navigate(`/events/${eventId}/email-attendees`);
+  };
+
   const handleDelete = async () => {
     try {
       await axios.delete(`${import.meta.env.VITE_LOCALHOST}/events/${eventId}`);
@@ -129,9 +133,18 @@ const EventDetailsPage = () => {
           </Button>
         </div>
       </section>
-      <section className="px-5">
-        <h2 className="text-center">Event Attendees</h2>
-        <p className="text-center fw-semibold bg-primary-subtle">
+      <section className="px-5 py-4">
+        <h2 className="text-center mb-4">Event Attendees</h2>
+
+        {eventAttendees.length > 0 && (
+          <div className="text-center">
+            <Button className="text-center" onClick={handleNavToEmailAttendees}>
+              Email All Attendees
+            </Button>
+          </div>
+        )}
+
+        <p className="text-center fw-semibold mt-4 bg-primary-subtle">
           Total: {eventAttendees.length}
         </p>
         <ListGroup>
@@ -147,7 +160,7 @@ const EventDetailsPage = () => {
           ))}
         </ListGroup>
       </section>
-      <section className="text-center px-5 mt-4 pb-5">
+      <section className="text-center px-5 pt-4 pb-5 bg-body-tertiary">
         <h2>Event Photos</h2>
         <PhotosUploadForm eventId={eventDetails.event_id} />
       </section>

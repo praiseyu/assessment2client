@@ -10,7 +10,7 @@ import {
   Col,
   Card,
 } from "react-bootstrap";
-import EventCard from "./EventCard/EventCard";
+import EventCard from "../EventCard/EventCard";
 
 const EventCalendar = () => {
   const [eventData, setEventData] = useState([]);
@@ -32,7 +32,7 @@ const EventCalendar = () => {
 
   return (
     <div className="p-3">
-      <h1 className="text-center mb-3">Events Manager</h1>
+      {/* <h1 className="text-center mb-3">Events Manager</h1>
       <div className="justify-content-center d-flex gap-3 py-3 mb-3">
         <Button className="btn-warning">
           <Link
@@ -50,7 +50,15 @@ const EventCalendar = () => {
             New Attendee
           </Link>
         </Button>
-      </div>
+        <Button className="btn-info">
+          <Link
+            to="/attendees"
+            style={{ color: "black", textDecoration: "none" }}
+          >
+            View Attendees
+          </Link>
+        </Button>
+      </div> */}
       <h2 className="text-center pb-2">All Events</h2>
       <div className="px-4 d-flex gap-4 flex-wrap justify-content-center">
         {eventData
