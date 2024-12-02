@@ -2,14 +2,14 @@ import { Button, Image, ListGroup } from "react-bootstrap";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import PhotosUploadForm from "./PhotosUploadForm/PhotosUploadForm";
+import PhotosUploadForm from "../../components/PhotosUploadForm/PhotosUploadForm";
 import arrowLeftIcon from "../../assets/icons/arrow-left.svg";
+import PhotoGallery from "../../components/PhotoGallery/PhotoGallery";
 
 const EventDetailsPage = () => {
-  //   const LOCAL_HOST = "http://localhost:8080";
   const { eventId } = useParams();
   const [eventDetails, setEventDetails] = useState({});
-  const [eventPhotos, setEventPhotos] = useState([]);
+  const [eventPhotos, setEventPhotos] = useState(null);
   const [eventAttendees, setEventAttendees] = useState([]);
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const EventDetailsPage = () => {
 
   async function getEventPhotos() {
     try {
-      const response = axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_LOCALHOST}/events/${eventId}/photos`
       );
       setEventPhotos(response.data);
@@ -74,18 +74,13 @@ const EventDetailsPage = () => {
 
   useEffect(() => {
     getEventDetails();
-    // getEventPhotos();
+    getEventPhotos();
     getEventAttendees();
   }, [eventId]);
 
-  if (Object.keys(eventDetails).length === 0) {
+  if (Object.keys(eventDetails).length === 0 || eventPhotos === null) {
     return <p>Loading...</p>;
   }
-  // console.log(eventAttendees);
-  eventAttendees.forEach((event) => {
-    console.log(event.firstName);
-  });
-
   return (
     <>
       <section className="px-3 pt-5 pb-5 text-center bg-body-tertiary">
@@ -162,6 +157,12 @@ const EventDetailsPage = () => {
       </section>
       <section className="text-center px-5 pt-4 pb-5 bg-body-tertiary">
         <h2>Event Photos</h2>
+        {eventPhotos && eventPhotos.length > 0 ? (
+          <PhotoGallery eventPhotos={eventPhotos} />
+        ) : (
+          <p>No photos uploaded yet.</p>
+        )}
+
         <PhotosUploadForm eventId={eventDetails.event_id} />
       </section>
     </>

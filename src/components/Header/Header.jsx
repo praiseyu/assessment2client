@@ -5,7 +5,9 @@ const Header = () => {
   const location = useLocation();
   return (
     <>
-      <h1 className="text-center py-4">Events Manager</h1>
+      <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+        <h1 className="text-center py-4">Events Manager</h1>
+      </Link>
       <div className="justify-content-center d-flex gap-3 pb-4">
         <Button className="btn-warning">
           <Link
@@ -24,14 +26,29 @@ const Header = () => {
           </Link>
         </Button>
       </div>
-      <Nav justify variant="tabs" activeKey={location.pathname}>
+      <Nav
+        justify
+        variant="tabs"
+        activeKey={location.pathname}
+        className="gap-2 mx-2"
+      >
         <Nav.Item>
-          <Nav.Link as={NavLink} to="/events" eventKey="/events">
+          <Nav.Link
+            as={NavLink}
+            to="/events"
+            eventKey="/events"
+            className="bg-light"
+          >
             Events
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link as={NavLink} to="/attendees" eventKey="link-2">
+          <Nav.Link
+            as={NavLink}
+            to="/attendees"
+            eventKey="link-2"
+            className="bg-light"
+          >
             Attendees
           </Nav.Link>
         </Nav.Item>

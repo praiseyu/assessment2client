@@ -1,11 +1,10 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import arrowLeftIcon from "../../assets/icons/arrow-left.svg";
 
 const AddEventForm = () => {
-  //   const LOCAL_HOST = "http://localhost:8080";
   const [eventFormData, setEventFormData] = useState({
     title: "",
     description: "",
@@ -17,6 +16,8 @@ const AddEventForm = () => {
 
   const [coverPhoto, setCoverPhoto] = useState(null);
   const [validated, setValidated] = useState(false);
+  const [show, setShow] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -44,7 +45,6 @@ const AddEventForm = () => {
     if (form.checkValidity() === false) {
       e.stopPropagation();
     } else {
-      // console.log(true);
       const newEventData = new FormData();
       for (const key in eventFormData) {
         newEventData.append(key, eventFormData[key]);
@@ -55,6 +55,11 @@ const AddEventForm = () => {
       }
 
       postNewEvent(newEventData);
+      setShow(true);
+      setTimeout(() => {
+        setShow(false);
+        navigate("/events");
+      }, 3000);
     }
     setValidated(true);
   };
@@ -67,8 +72,10 @@ const AddEventForm = () => {
         newEvent,
         config
       );
+      setModalMessage("Event successfully created.");
     } catch (err) {
       console.error("error message:", err.response?.data || err.message);
+      setModalMessage("Event was not created. Try again.");
     }
   }
 
@@ -191,11 +198,15 @@ const AddEventForm = () => {
             />
           )}
         </Form.Group>
-        {/* <img src="../"></img> */}
         <Button type="submit" className="d-block mx-auto w-50">
           Create Event
         </Button>
       </Form>
+      <Modal size="sm" show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalMessage}</Modal.Title>
+        </Modal.Header>
+      </Modal>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
@@ -13,6 +13,8 @@ const EmailFormPage = () => {
     message: "",
   });
   const [validated, setValidated] = useState(false);
+  const [show, setShow] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleBackClick = () => {
     navigate("/");
@@ -34,22 +36,26 @@ const EmailFormPage = () => {
     if (form.checkValidity() === false) {
       e.stopPropagation();
     } else {
-      const response = await sendEmailToEventAttendees(emailFormData);
-      console.log(response);
+      sendEmailToEventAttendees(emailFormData);
+      setShow(true);
+      setTimeout(() => {
+        setShow(false);
+        navigate(`/events/${eventId}`);
+      }, 3000);
     }
     setValidated(true);
   };
 
   async function sendEmailToEventAttendees(email) {
     try {
-      //   const config = { headers: { "Content-Type": "multipart/form-data" } };
       const response = await axios.post(
         `${import.meta.env.VITE_LOCALHOST}/events/${eventId}/attendees`,
         email
       );
-      console.log(response.data);
+      setModalMessage("Emails successfully sent to attendees.");
     } catch (err) {
       console.error("error message:", err.response?.data || err.message);
+      setModalMessage("Emails were not sent. Try again.");
     }
   }
 
@@ -107,6 +113,11 @@ const EmailFormPage = () => {
           Send Emails
         </Button>
       </Form>
+      <Modal size="sm" show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalMessage}</Modal.Title>
+        </Modal.Header>
+      </Modal>
     </div>
   );
 };

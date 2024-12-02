@@ -5,7 +5,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 const PhotosUploadForm = ({ eventId }) => {
   const [files, setFiles] = useState(null);
   const [progress, setProgress] = useState({ started: false, pc: 0 });
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
 
   async function handleUpload(e) {
     e.preventDefault();

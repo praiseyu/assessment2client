@@ -1,9 +1,8 @@
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import arrowLeftIcon from "../../assets/icons/arrow-left.svg";
 import axios from "axios";
-// add axios post form
 
 const AddAttendeeForm = ({
   isEditing = false,
@@ -11,6 +10,8 @@ const AddAttendeeForm = ({
   attendeeId,
 }) => {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const [attendeeInfo, setAttendeeInfo] = useState({
     firstName: "",
@@ -29,7 +30,7 @@ const AddAttendeeForm = ({
     }));
   };
   const handleBackClick = () => {
-    navigate("/");
+    navigate("/attendees");
   };
 
   const handleSubmit = async (e) => {
@@ -44,28 +45,29 @@ const AddAttendeeForm = ({
             `${import.meta.env.VITE_LOCALHOST}/attendees/${attendeeId}`,
             attendeeInfo
           );
+          setModalMessage("Attendee updated succesfully.");
         } else {
           const response = await axios.post(
             `${import.meta.env.VITE_LOCALHOST}/attendees`,
             attendeeInfo
           );
-          console.log(response.data);
+          setModalMessage("Attendee created successfully.");
         }
       } catch (err) {
         console.error(
           `Error ${isEditing ? "editing" : "creating"} attendee: ${err.message}`
         );
+        setModalMessage("An error occurred. Try again.");
       }
+      setShow(true);
+      setTimeout(() => {
+        setShow(false);
+        navigate("/attendees");
+      }, 3000);
     }
     setValidated(true);
   };
 
-  // async function createNewAttendee(attendeeInfo) {
-  //   await axios.post(
-  //     `${import.meta.env.VITE_LOCALHOST}/attendees`,
-  //     attendeeInfo
-  //   );
-  // }
   useEffect(() => {
     if (isEditing) {
       setAttendeeInfo(initialData);
@@ -139,6 +141,11 @@ const AddAttendeeForm = ({
           {isEditing ? "Update Attendee" : "Create Attendee"}
         </Button>
       </Form>
+      <Modal size="sm" show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalMessage}</Modal.Title>
+        </Modal.Header>
+      </Modal>
     </div>
   );
 };
